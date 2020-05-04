@@ -370,6 +370,8 @@ peak_day <-
 ```
 
   - Peak day: 2020-01-04
+  - Lower boundary: 2019-11-05
+  - Upper boundary: 2020-03-04
 
 <!-- end list -->
 
@@ -783,6 +785,8 @@ peak_day <-
 ```
 
   - Peak day: 2020-03-23
+  - Lower boundary: 2020-01-23
+  - Upper boundary: 2020-05-22
 
 <!-- end list -->
 
