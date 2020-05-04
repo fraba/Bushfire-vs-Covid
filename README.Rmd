@@ -57,6 +57,8 @@ peak_day <-
 ```
 
 * Peak day: `r peak_day`
+* Lower boundary: `r peak_day-60`
+* Upper boundary: `r peak_day+60`
 
 ```{r, fig.cap="Frequency distribution and 60-day window around peak"}
 bush_count.df %>%
@@ -106,6 +108,8 @@ peak_day <-
 ```
 
 * Peak day: `r peak_day`
+* Lower boundary: `r peak_day-60`
+* Upper boundary: `r peak_day+60`
 
 ```{r, fig.cap="Frequency distribution and 60-day window around peak"}
 corona_count.df %>%
