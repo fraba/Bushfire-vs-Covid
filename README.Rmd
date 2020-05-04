@@ -1,0 +1,115 @@
+---
+title: "Bushfire vs Covid v1"
+author: "Francesco Bailo"
+date: "2020-05-04"
+output:
+  github_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r, warning=F, message=F}
+library(ggplot2)
+library(dplyr)
+library(knitr)
+```
+
+Media Cloud data (mediacloud.org) collected on 4 May 2020.
+
+# Bushfire
+
+```{r}
+raw_bush.df <- 
+  read.csv("bushfire-all-story-urls-20200504060053.csv",
+           stringsAsFactors = F)
+raw_bush.df$posix <- 
+  as.POSIXct(raw_bush.df$publish_date, tz = "CET")
+```
+
+* Records: `r nrow(raw_bush.df)`
+* Search term: `bushfire`
+* Media Cloud collections:
+  * `Australia - National` https://sources.mediacloud.org/#/collections/34412282
+  * `Australia - State & Local` https://sources.mediacloud.org/#/collections/38378024
+* From: `r min(raw_bush.df$posix)`
+* To: `r max(raw_bush.df$posix)`
+
+## Sources
+
+```{r}
+raw_bush.df %>%
+  dplyr::group_by(media_name) %>%
+  dplyr::summarize(n = n(),
+                   `%` = round(n() / nrow(raw_bush.df) * 100,2)) %>%
+  dplyr::arrange(desc(n)) %>%
+  dplyr::mutate(media_name = gsub("\\|", "~", media_name)) %>%
+kable(format = 'markdown')
+```
+
+
+```{r}
+bush_count.df <-
+  raw_bush.df %>%
+  dplyr::group_by(day = as.Date(posix)) %>%
+  dplyr::count()
+peak_day <- 
+  bush_count.df$day[which.max(bush_count.df$n)]
+```
+
+* Peak day: `r peak_day`
+
+```{r, fig.cap="Frequency distribution and 60-day window around peak"}
+bush_count.df %>%
+ggplot(aes(x=day,y=n)) +
+  geom_line() +
+  geom_vline(xintercept = c(peak_day-30, peak_day+30))
+```
+
+# Coronavirus
+
+```{r}
+raw_corona.df <- 
+  read.csv("coronavirus-all-story-urls-20200504062305.csv",
+           stringsAsFactors = F)
+raw_corona.df$posix <- 
+  as.POSIXct(raw_corona.df$publish_date, tz = "CET")
+```
+
+* Records: `r nrow(raw_corona.df)`
+* Search term: `coronavirus`
+* Media Cloud collections:
+  * `Australia - National` https://sources.mediacloud.org/#/collections/34412282
+  * `Australia - State & Local` https://sources.mediacloud.org/#/collections/38378024
+* From: `r min(raw_corona.df$posix)`
+* To: `r max(raw_corona.df$posix)`
+
+## Sources
+
+```{r}
+raw_corona.df %>%
+  dplyr::group_by(media_name) %>%
+  dplyr::summarize(n = n(),
+                   `%` = round(n() / nrow(raw_corona.df) * 100,2)) %>%
+  dplyr::arrange(desc(n)) %>%
+  dplyr::mutate(media_name = gsub("\\|", "~", media_name)) %>%
+kable(format = 'markdown')
+```
+
+
+```{r}
+corona_count.df <-
+  raw_corona.df %>%
+  dplyr::group_by(day = as.Date(posix)) %>%
+  dplyr::count()
+peak_day <- 
+  corona_count.df$day[which.max(corona_count.df$n)]
+```
+
+* Peak day: `r peak_day`
+
+```{r, fig.cap="Frequency distribution and 60-day window around peak"}
+corona_count.df %>%
+ggplot(aes(x=day,y=n)) +
+  geom_line() +
+  geom_vline(xintercept = c(peak_day-30, peak_day+30))
+```
